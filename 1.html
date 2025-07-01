@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>友谊万岁 - 生日祝福</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 烟花效果容器 */
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 20, 147, 0.9);
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e, #ffb6b6, #ff8e8e, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2.5s infinite;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            color: #f8f8f8;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        
+        /* 主内容布局 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        /* 照片轮播区域 */
+        .photo-carousel {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            height: 1000px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .carousel-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 20;
+        }
+        
+        .nav-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: #ff6b6b;
+            transform: scale(1.3);
+        }
+        
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-control:hover {
+            background: rgba(255, 105, 180, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .prev {
+            left: 20px;
+        }
+        
+        .next {
+            right: 20px;
+        }
+        
+        /* 祝福区 */
+        .wishes-area {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* 生日蛋糕 */
+        .birthday-cake {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cake-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ffb6c1;
+        }
+        
+        .cake {
+            position: relative;
+            width: 220px;
+            height: 150px;
+            margin: 0 auto 20px;
+        }
+        
+        .plate {
+            width: 250px;
+            height: 20px;
+            background: linear-gradient(to right, #a9a9a9, #d3d3d3, #a9a9a9);
+            border-radius: 5px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .layer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+        }
+        
+        .layer-1 {
+            width: 180px;
+            height: 50px;
+            background: linear-gradient(to right, #f9d5bb, #f6c7a9, #f9d5bb);
+            bottom: 20px;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .layer-2 {
+            width: 150px;
+            height: 45px;
+            background: linear-gradient(to right, #ffb6c1, #ffc0cb, #ffb6c1);
+            bottom: 70px;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .layer-3 {
+            width: 120px;
+            height: 40px;
+            background: linear-gradient(to right, #dda0dd, #e6c9e6, #dda0dd);
+            bottom: 115px;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .candle {
+            position: absolute;
+            width: 8px;
+            height: 30px;
+            background: linear-gradient(to bottom, #ff6b6b, #ff8e53, #ff6b6b);
+            bottom: 155px;
+            border-radius: 3px;
+        }
+        
+        .candle:nth-child(1) { left: 45%; }
+        .candle:nth-child(2) { left: 55%; }
+        
+        .flame {
+            position: absolute;
+            width: 12px;
+            height: 25px;
+            background: linear-gradient(to bottom, #ffde59, #ff8c00, #ff4500);
+            border-radius: 50% 50% 20% 20%;
+            bottom: 185px;
+            animation: flicker 1.5s infinite alternate;
+        }
+        
+        .flame:nth-child(3) { left: 44%; }
+        .flame:nth-child(4) { left: 54%; }
+        
+        /* 玫瑰祝福区 */
+        .rose-wishes {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rose-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ffb6c1;
+            text-align: center;
+        }
+        
+        .roses-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .rose {
+            width: 80px;
+            height: 120px;
+            position: relative;
+            animation: float 4s infinite ease-in-out;
+        }
+        
+        .rose .flower {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #ff0077, #c9005b);
+            border-radius: 50%;
+            top: 0;
+            left: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 119, 0.6);
+        }
+        
+        .rose .stem {
+            position: absolute;
+            width: 6px;
+            height: 80px;
+            background: linear-gradient(to right, #2a8f2a, #3daa3d);
+            top: 50px;
+            left: 38px;
+            border-radius: 10px;
+        }
+        
+        .rose .leaf {
+            position: absolute;
+            width: 25px;
+            height: 15px;
+            background: #3daa3d;
+            border-radius: 50% 0 50% 0;
+            top: 80px;
+            left: 42px;
+            transform: rotate(-30deg);
+        }
+        
+        .wishes-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+        
+        /* 音乐播放器 */
+        .music-player {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .player-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #ffb6c1;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 105, 180, 0.7);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 20, 147, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+        
+        .volume-slider {
+            width: 100px;
+            margin: 0 10px;
+        }
+        
+        .song-info {
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            padding: 30px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 50px;
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.8; transform: scale(1); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .photo-carousel {
+                height: 500px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .subtitle { font-size: 1.3rem; }
+            .photo-carousel { height: 400px; }
+            .control-btn { width: 50px; height: 50px; }
+            .play-btn { width: 60px; height: 60px; }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.1rem; }
+            .photo-carousel { height: 300px; }
+            .carousel-control { width: 40px; height: 40px; font-size: 1.2rem; }
+            .wishes-text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 烟花容器 -->
+    <canvas id="fireworks"></canvas>
+    
+    <div class="container">
+        <header>
+            <h1>🎂 天天开心 🎉</h1>
+            <p class="subtitle">途有好伴不觉长远</p>
+            <p class="subtitle">照片记录我们的美好时刻</p>
+        </header>
+        
+        <div class="main-content">
+            <!-- 照片轮播区 -->
+            <div class="photo-carousel">
+                <div class="carousel-container" id="carousel">
+                    <!-- 幻灯片将由JS动态添加 -->
+                </div>
+                
+                <button class="carousel-control prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <div class="carousel-nav" id="carouselNav">
+                    <!-- 导航点将由JS动态添加 -->
+                </div>
+            </div>
+            
+            <!-- 祝福区 -->
+            <div class="wishes-area">
+                <!-- 生日蛋糕 -->
+                <div class="birthday-cake">
+                    <h2 class="cake-title">许个愿吧！</h2>
+                    <div class="cake">
+                        <div class="plate"></div>
+                        <div class="layer layer-1"></div>
+                        <div class="layer layer-2"></div>
+                        <div class="layer layer-3"></div>
+                        <div class="candle"></div>
+                        <div class="candle"></div>
+                        <div class="flame"></div>
+                        <div class="flame"></div>
+                    </div>
+                    <p>吹灭蜡烛，许下心愿，愿我们每个梦想都成真！</p>
+                </div>
+                
+                <!-- 玫瑰祝福 -->
+                <div class="rose-wishes">
+                    <h2 class="rose-title">玫瑰祝福 🌹</h2>
+                    <div class="roses-container">
+                        <div class="rose">
+                            <div class="flower"></div>
+                            <div class="stem"></div>
+                            <div class="leaf"></div>
+                        </div>
+                        <div class="rose">
+                            <div class="flower"></div>
+                            <div class="stem"></div>
+                            <div class="leaf"></div>
+                        </div>
+                        <div class="rose">
+                            <div class="flower"></div>
+                            <div class="stem"></div>
+                            <div class="leaf"></div>
+                        </div>
+                    </div>
+                    <div class="wishes-text">
+                        <p>愿我们生活如玫瑰般芬芳，</p>
+                        <p>如烟花般绚烂，</p>
+                        <p>如蛋糕般甜蜜！</p>
+                        <p>永远快乐，永远幸福！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 音乐播放器 -->
+        <div class="music-player">
+            <h2 class="player-title">背景音乐</h2>
+            <div class="player-controls">
+                <button class="control-btn" id="prevBtn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-btn" id="playBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-btn" id="nextBtn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+            </div>
+            <div class="song-info">
+                正在播放: <span id="currentSong">生日祝福歌</span>
+            </div>
+            <audio id="audioPlayer" autoplay loop>
+                <source src="http://music.163.com/song/media/outer/url?id=29771231.mp3" type="audio/mpeg">
+                您的浏览器不支持音频元素。
+            </audio>
+        </div>
+    
+        <footer>
+            <p>精心制作 | 特别祝福 | 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // 照片数据 - 50张照片URL（实际使用时替换为您的照片链接）
+        const photos = [
+            'https://s21.ax1x.com/2025/06/23/pVZRhjI.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuoUH.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuq2t.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuLxP.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuXKf.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeujr8.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuvqS.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeuzVg.jpg',
+            'https://s21.ax1x.com/2025/06/24/pVeKSaQ.jpg',
+            'https://s21.ax1x.com/2025/06/23/pVZRW3d.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmVf3V.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmVbNR.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmVO9x.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmVX36.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmVzuD.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmZCEd.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmZi4I.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmZkCt.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKuhd.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKQ1I.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKJHS.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKNNQ.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKd9s.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmK0cq.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKhg1.jpg',
+            'https://s21.ax1x.com/2025/06/26/pVmKoDK.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOUqf.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOwdS.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnO0Ig.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnODiQ.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOsRs.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOyzn.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOWZT.jpg',
+            'https://s21.ax1x.com/2025/06/30/pVnOfdU.jpg',
+            'https://img.picui.cn/free/2025/07/01/686392f887ee4.jpg',
+            'https://img.picui.cn/free/2025/07/01/686393923ca27.jpg',
+            'https://img.picui.cn/free/2025/07/01/686393bcd9979.jpg',
+            'https://img.picui.cn/free/2025/07/01/6863940b60161.jpg',
+            'https://img.picui.cn/free/2025/07/01/6863944670a41.jpg',
+            'https://img.picui.cn/free/2025/07/01/6863946db2f54.jpg',
+            'https://img.picui.cn/free/2025/07/01/6863949ab5910.jpg',
+            'https://img.picui.cn/free/2025/07/01/686394c7d5e6b.jpg',
+            'https://img.picui.cn/free/2025/07/01/686397a4ef5bf.jpg',
+            'https://img.picui.cn/free/2025/07/01/686397d98727d.jpg',
+            'https://img.picui.cn/free/2025/07/01/6863988706713.jpg',
+            'https://img.picui.cn/free/2025/07/01/686398b14ce9c.jpg',
+            'https://img.picui.cn/free/2025/07/01/686398e5818ce.jpg',
+            'https://img.picui.cn/free/2025/07/01/68639901c07a5.jpg',
+        ];
+        
+        // 音乐播放列表
+        const songs = [
+            { title: "我们的明天", src: "http://music.163.com/song/media/outer/url?id=29771231.mp3" }
+        ];
+        
+        // 初始化轮播图
+        const carousel = document.getElementById('carousel');
+        const carouselNav = document.getElementById('carouselNav');
+        let currentSlide = 0;
+        let autoSlideInterval;
+        
+        // 创建幻灯片和导航点
+        photos.forEach((photo, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide';
+            slide.style.backgroundImage = `url('${photo}')`;
+            slide.dataset.index = index;
+            carousel.appendChild(slide);
+            
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot';
+            dot.dataset.index = index;
+            carouselNav.appendChild(dot);
+        });
+        
+        // 获取所有幻灯片和导航点
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.nav-dot');
+        
+        // 显示第一张幻灯片
+        slides[0].classList.add('active');
+        dots[0].classList.add('active');
+        
+        // 轮播函数
+        function showSlide(index) {
+            // 移除所有活动状态
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // 添加当前活动状态
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // 导航点点击事件
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(parseInt(dot.dataset.index));
+            });
+        });
+        
+        // 上一张/下一张按钮
+        document.querySelector('.prev').addEventListener('click', () => {
+            let prevIndex = currentSlide - 1;
+            if (prevIndex < 0) prevIndex = slides.length - 1;
+            showSlide(prevIndex);
+        });
+        
+        document.querySelector('.next').addEventListener('click', () => {
+            let nextIndex = currentSlide + 1;
+            if (nextIndex >= slides.length) nextIndex = 0;
+            showSlide(nextIndex);
+        });
+        
+        // 自动轮播
+        // function startAutoSlide() {
+        //     autoSlideInterval = setInterval(() => {
+        //         let nextIndex = currentSlide + 1;
+        //         if (nextIndex >= slides.length) nextIndex = 0;
+        //         showSlide(nextIndex);
+        //     }, 3000);
+        // }
+        
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+        
+        startAutoSlide();
+        
+        // 烟花效果
+        const fireworksCanvas = document.getElementById('fireworks');
+        const ctx = fireworksCanvas.getContext('2d');
+        
+        // 设置canvas大小为窗口大小
+        function resizeCanvas() {
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 2 + 1;
+                this.velocity = {
+                    x: Math.random() * 6 - 3,
+                    y: Math.random() * 6 - 3
+                };
+                this.alpha = 1;
+                this.decay = 0.015;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+            
+            update() {
+                this.velocity.y += 0.05;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+        }
+        
+        let particles = [];
+        
+        function createFirework(x, y) {
+            const colors = ['#ff6b6b', '#ff8e53', '#f9c74f', '#4cc9f0', '#4361ee', '#7209b7'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const particleCount = 150;
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+        
+        function animateFireworks() {
+            requestAnimationFrame(animateFireworks);
+            ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
+            ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+            
+            particles.forEach((particle, index) => {
+                if (particle.alpha > 0) {
+                    particle.update();
+                    particle.draw();
+                } else {
+                    particles.splice(index, 1);
+                }
+            });
+        }
+        
+        animateFireworks();
+        
+        // 随机烟花效果
+        function randomFireworks(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * fireworksCanvas.width;
+                    const y = Math.random() * fireworksCanvas.height * 0.6;
+                    createFirework(x, y);
+                }, i * 300);
+            }
+        }
+        
+        // 初始烟花
+        setTimeout(() => {
+            randomFireworks(8);
+        }, 1000);
+        
+        // 定期烟花
+        setInterval(() => {
+            randomFireworks(3);
+        }, 8000);
+        
+        // 音乐播放器功能
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSongElement = document.getElementById('currentSong');
+        
+        let currentSongIndex = 0;
+        
+        // 更新歌曲信息
+        function updateSongInfo() {
+            currentSongElement.textContent = songs[currentSongIndex].title;
+        }
+        
+        // 播放/暂停按钮功能
+        playBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                audioPlayer.pause();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        // 上一首按钮功能
+        prevBtn.addEventListener('click', () => {
+            currentSongIndex--;
+            if (currentSongIndex < 0) currentSongIndex = songs.length - 1;
+            audioPlayer.src = songs[currentSongIndex].src;
+            audioPlayer.play();
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            updateSongInfo();
+        });
+        
+        // 下一首按钮功能
+        nextBtn.addEventListener('click', () => {
+            currentSongIndex++;
+            if (currentSongIndex >= songs.length) currentSongIndex = 0;
+            audioPlayer.src = songs[currentSongIndex].src;
+            audioPlayer.play();
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            updateSongInfo();
+        });
+        
+        // 歌曲结束时自动下一首
+        audioPlayer.addEventListener('ended', () => {
+            nextBtn.click();
+        });
+        
+        // 初始化歌曲信息
+        updateSongInfo();
+        
+        // 确保音乐自动播放
+        document.addEventListener('click', function initAudio() {
+            if (audioPlayer.paused) {
+                audioPlayer.play().then(() => {
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(e => {
+                    console.log("自动播放失败:", e);
+                });
+            }
+            document.removeEventListener('click', initAudio);
+        });
+        
+        // 尝试自动播放音乐
+        window.addEventListener('load', () => {
+            audioPlayer.play().then(() => {
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(e => {
+                console.log("自动播放失败，需要用户交互:", e);
+            });
+        });
+    </script>
+</body>
+</html>
